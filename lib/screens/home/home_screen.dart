@@ -19,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(layoutType);
     return Scaffold(
       appBar: AppBar(actions: [
         TextButton(
@@ -45,12 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: layoutType == Layout.grid
-                ? CategoryGrid(
-                    categoryCollection: categoryCollection,
-                  )
-                : CategoryList(categoryCollection: categoryCollection),
-          ),
+              child: layoutType == Layout.grid
+                  ? CategoryGrid(
+                      categoryCollection: categoryCollection,
+                    )
+                  : CategoryList(categoryCollection: categoryCollection)
+              // : CategoryList(categoryCollection: categoryCollection),
+              ),
           const Footer()
         ],
       ),
