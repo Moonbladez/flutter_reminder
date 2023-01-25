@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:reminders/models/category_collection.dart';
+import 'package:reminders/models/category.dart';
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({
     Key? key,
-    required this.categoryCollection,
+    required this.categories,
   }) : super(key: key);
 
-  final CategoryCollection categoryCollection;
+  final List<Category> categories;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class CategoryGrid extends StatelessWidget {
       crossAxisCount: 2,
       mainAxisSpacing: 8,
       padding: const EdgeInsets.all(8),
-      children: categoryCollection.categories
+      children: categories
           .map(
             (category) => Container(
               decoration: BoxDecoration(

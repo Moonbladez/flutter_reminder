@@ -13,8 +13,9 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-  final _evenColor = Colors.blueGrey.withOpacity(0.2);
-  final _oddColor = Colors.blueGrey.withOpacity(0.1);
+  final Color _evenColor = Colors.blueGrey.withOpacity(0.2);
+  final Color _oddColor = Colors.blueGrey.withOpacity(0.1);
+
   @override
   Widget build(BuildContext context) {
     return ReorderableListView.builder(
@@ -24,10 +25,23 @@ class _CategoryListState extends State<CategoryList> {
         return ListTile(
           key: UniqueKey(),
           leading: Container(
-            decoration: const BoxDecoration(
-                color: Colors.blueAccent, shape: BoxShape.circle),
-            child: const Icon(Icons.check),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color:
+                        category.isChecked ? Colors.blueAccent : Colors.grey),
+                color:
+                    category.isChecked ? Colors.blueAccent : Colors.transparent,
+                shape: BoxShape.circle),
+            child: Icon(
+              Icons.check,
+              color: category.isChecked ? Colors.white : Colors.transparent,
+            ),
           ),
+          onTap: () {
+            setState(() {
+              category.toggleCheckbox();
+            });
+          },
           title: Row(
             children: [
               category.icon,
@@ -45,8 +59,8 @@ class _CategoryListState extends State<CategoryList> {
               newIndex -= 1;
             }
             final Category item =
-                widget.categoryCollection.categories.removeAt(oldIndex);
-            widget.categoryCollection.categories.insert(newIndex, item);
+                widget.categoryCollection.removeItem(oldIndex);
+            widget.categoryCollection.insert(newIndex, item);
           },
         );
       },

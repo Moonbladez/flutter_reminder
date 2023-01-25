@@ -11,4 +11,8 @@ class Category {
       required this.name,
       this.isChecked = true,
       required this.icon});
+
+  void toggleCheckbox() {
+    isChecked = !isChecked;
+  }
 }

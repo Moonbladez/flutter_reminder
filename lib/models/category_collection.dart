@@ -1,9 +1,12 @@
+import 'dart:collection';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:reminders/models/category.dart';
 import 'package:reminders/shared/category_icon.dart';
 
 class CategoryCollection {
-  final List<Category> categories = [
+  final List<Category> _categories = [
     Category(
       int: "today",
       name: "Today",
@@ -30,4 +33,19 @@ class CategoryCollection {
           bgColor: Colors.orange, iconData: Icons.flag_rounded),
     )
   ];
+
+  UnmodifiableListView<Category> get categories =>
+      UnmodifiableListView(_categories);
+
+  Category removeItem(index) {
+    return _categories.removeAt(index);
+  }
+
+  void insert(index, item) {
+    _categories.insert(index, item);
+  }
+
+  List<Category> get selectedCategories {
+    return _categories.where((category) => category.isChecked).toList();
+  }
 }

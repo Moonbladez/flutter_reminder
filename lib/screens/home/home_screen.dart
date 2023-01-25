@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
               child: layoutType == Layout.grid
                   ? CategoryGrid(
-                      categoryCollection: categoryCollection,
+                      categories: categoryCollection.selectedCategories,
                     )
                   : CategoryList(categoryCollection: categoryCollection)
               // : CategoryList(categoryCollection: categoryCollection),
