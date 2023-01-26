@@ -44,13 +44,17 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-              child: layoutType == Layout.grid
-                  ? CategoryGrid(
-                      categories: categoryCollection.selectedCategories,
-                    )
-                  : CategoryList(categoryCollection: categoryCollection)
-              // : CategoryList(categoryCollection: categoryCollection),
+            child: AnimatedCrossFade(
+              duration: const Duration(milliseconds: 500),
+              crossFadeState: layoutType == Layout.grid
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              firstChild: CategoryGrid(
+                categories: categoryCollection.selectedCategories,
               ),
+              secondChild: CategoryList(categoryCollection: categoryCollection),
+            ),
+          ),
           const Footer()
         ],
       ),
