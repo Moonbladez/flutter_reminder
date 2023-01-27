@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:reminders/screens/home/category_grid.dart';
-import 'package:reminders/screens/home/category_list.dart';
-import 'package:reminders/screens/home/footer.dart';
+import 'package:reminders/screens/home/widgets/category_grid.dart';
+import 'package:reminders/screens/home/widgets/category_list.dart';
+import 'package:reminders/screens/home/widgets/footer.dart';
 
 import '../../models/category_collection.dart';
 
@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Text(
             layoutType == Layout.grid ? 'Edit' : 'Done',
-            style: const TextStyle(color: Colors.white),
           ),
         )
       ]),
