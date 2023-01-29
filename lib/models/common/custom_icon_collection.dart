@@ -1,52 +1,15 @@
 import 'dart:collection';
-
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:reminders/models/common/custom_icon.dart';
 
 class CustomIconCollection {
   final List<CustomIcon> _icons = [
-    CustomIcon(
-      id: "bar_chart",
-      icon: const Icon(
-        Icons.bar_chart,
-        size: 30,
-      ),
-    ),
-    CustomIcon(
-      id: "alarm",
-      icon: const Icon(
-        Icons.alarm,
-        size: 30,
-      ),
-    ),
-    CustomIcon(
-      id: "calendar_month",
-      icon: const Icon(
-        Icons.calendar_month,
-        size: 30,
-      ),
-    ),
-    CustomIcon(
-      id: "waves",
-      icon: const Icon(
-        Icons.waves,
-        size: 30,
-      ),
-    ),
-    CustomIcon(
-      id: "person",
-      icon: const Icon(
-        Icons.person,
-        size: 30,
-      ),
-    ),
-    CustomIcon(
-      id: "folder",
-      icon: const Icon(
-        Icons.folder,
-        size: 30,
-      ),
-    )
+    CustomIcon(id: "bar_chart", icon: CupertinoIcons.bars),
+    CustomIcon(id: "alarm", icon: CupertinoIcons.alarm),
+    CustomIcon(id: "bell", icon: CupertinoIcons.bell),
+    CustomIcon(id: "book", icon: CupertinoIcons.book),
+    CustomIcon(id: "bookmark", icon: CupertinoIcons.bookmark),
+    CustomIcon(id: "calendar", icon: CupertinoIcons.calendar),
   ];
 
   UnmodifiableListView<CustomIcon> get icons => UnmodifiableListView(_icons);

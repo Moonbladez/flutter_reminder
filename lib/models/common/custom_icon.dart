@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomIcon {
   String id;
-  Icon icon;
+  IconData icon;
 
   CustomIcon({
     required this.id,

@@ -17,6 +17,7 @@ class CategoryGrid extends StatelessWidget {
       crossAxisCount: 2,
       mainAxisSpacing: 8,
       padding: const EdgeInsets.all(8),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       children: categories
           .map(

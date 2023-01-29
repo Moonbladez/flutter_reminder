@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reminders/models/common/custom_color.dart';
 import 'package:reminders/models/common/custom_color_collection.dart';
 import 'package:reminders/models/common/custom_icon.dart';
 import 'package:reminders/models/common/custom_icon_collection.dart';
+import 'package:reminders/models/todo_list/todo_list.dart';
+import 'package:reminders/models/todo_list/todo_list_collection.dart';
 
 class AddListScreen extends StatefulWidget {
   const AddListScreen({super.key});
@@ -42,7 +45,19 @@ class _AddListScreenState extends State<AddListScreen> {
                 ? null
                 : () {
                     if (_textController.text.isNotEmpty) {
-                      print("add to db");
+                      Provider.of<ToDoListCollection>(context, listen: false)
+                          .addToDoList(
+                        ToDoList(
+                          id: DateTime.now().toString(),
+                          title: _textController.text,
+                          icon: {
+                            "id": _selectedIcon.id,
+                            "color": _selectedColor.id
+                          },
+                        ),
+                      );
+
+                      Navigator.pop(context);
                     } else {
                       print("throw error");
                     }
@@ -65,7 +80,7 @@ class _AddListScreenState extends State<AddListScreen> {
               decoration: BoxDecoration(
                   color: _selectedColor.color, shape: BoxShape.circle),
               padding: const EdgeInsets.all(4),
-              child: _selectedIcon.icon,
+              child: Icon(_selectedIcon.icon),
             ),
             const SizedBox(height: 16),
             Container(
@@ -164,7 +179,7 @@ class _AddListScreenState extends State<AddListScreen> {
                             color: Theme.of(context).cardColor,
                             shape: BoxShape.circle),
                         padding: const EdgeInsets.all(4),
-                        child: customIcon.icon,
+                        child: Icon(customIcon.icon),
                       ),
                     ),
                   )
