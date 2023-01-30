@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "521130274957",
+    "project_id": "bulu-flutter-reminders",
+    "storage_bucket": "bulu-flutter-reminders.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521130274957:android:99d07a847efec5cfecb2c4",
+        "android_client_info": {
+          "package_name": "com.example.reminders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521130274957-0qsavk68606850ris1f4b18er2vsq3pg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnLbIQHDZeG4gxvw-qeoin4ipuU09QApc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521130274957-0qsavk68606850ris1f4b18er2vsq3pg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
