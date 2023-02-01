@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reminders/models/category.dart';
+import 'package:reminders/models/reminder/reminder.dart';
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({
@@ -11,6 +13,8 @@ class CategoryGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final allReminders = Provider.of<List<Reminder>>(context);
+
     return GridView.count(
       childAspectRatio: 16 / 9,
       crossAxisSpacing: 8,
@@ -34,7 +38,14 @@ class CategoryGrid extends StatelessWidget {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [category.icon, const Text("0")],
+                      children: [
+                        category.icon,
+                        Text(
+                          getCategoryCount(
+                                  id: category.id, allReminders: allReminders)
+                              .toString(),
+                        ),
+                      ],
                     ),
                     Text(category.name,
                         style: Theme.of(context).textTheme.headline6),
@@ -45,5 +56,20 @@ class CategoryGrid extends StatelessWidget {
           )
           .toList(),
     );
+  }
+
+  int getCategoryCount({required String id, List<Reminder>? allReminders}) {
+    if (id == "all" && allReminders != null) {
+      return allReminders.length;
+    }
+
+    final categories =
+        allReminders?.where((reminder) => reminder.categoryId == id);
+
+    if (categories != null) {
+      return categories.length;
+    }
+
+    return 0;
   }
 }

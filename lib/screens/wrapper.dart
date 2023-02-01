@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminders/models/reminder/reminder.dart';
 import 'package:reminders/models/todo_list/todo_list.dart';
 import 'package:reminders/routes.dart';
 import 'package:reminders/screens/auth/authenticate_screen.dart';
 import 'package:reminders/screens/home/home_screen.dart';
+import 'package:reminders/screens/home/widgets/todolists.dart';
 import 'package:reminders/theme.dart';
 
 class Wrapper extends StatelessWidget {
@@ -31,9 +33,32 @@ class Wrapper extends StatelessWidget {
               .toList(),
         );
 
-    return StreamProvider<List<ToDoList>>.value(
-      value: toDoListStream,
-      initialData: const [],
+    final remindersStream = FirebaseFirestore.instance
+        .collection("users")
+        .doc(user?.uid)
+        .collection("reminders")
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (reminderSnapshot) => Reminder.fromJSON(
+                  reminderSnapshot.data(),
+                ),
+              )
+              .toList(),
+        );
+
+    return MultiProvider(
+      providers: [
+        StreamProvider<List<ToDoList>>.value(
+          value: toDoListStream,
+          initialData: const [],
+        ),
+        StreamProvider<List<Reminder>>.value(
+          value: remindersStream,
+          initialData: const [],
+        )
+      ],
       child: MaterialApp(
         title: 'Reminders',
         theme: appTheme,
