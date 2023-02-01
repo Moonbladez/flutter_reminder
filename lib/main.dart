@@ -3,10 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminders/firebase_options.dart';
-import 'package:reminders/models/todo_list/todo_list_collection.dart';
-import 'package:reminders/routes.dart';
 import 'package:reminders/screens/wrapper.dart';
-import 'package:reminders/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

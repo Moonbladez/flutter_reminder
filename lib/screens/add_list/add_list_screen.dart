@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminders/models/common/custom_color.dart';
@@ -45,17 +47,29 @@ class _AddListScreenState extends State<AddListScreen> {
                 ? null
                 : () {
                     if (_textController.text.isNotEmpty) {
-                      Provider.of<ToDoListCollection>(context, listen: false)
-                          .addToDoList(
-                        ToDoList(
-                          id: DateTime.now().toString(),
+                      final user = Provider.of<User?>(context, listen: false);
+                      final todoListRef = FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(user?.uid)
+                          .collection("todo_lists")
+                          .doc();
+
+                      final newToDoList = ToDoList(
+                          id: todoListRef.id,
                           title: _textController.text,
                           icon: {
                             "id": _selectedIcon.id,
                             "color": _selectedColor.id
                           },
-                        ),
-                      );
+                          reminderCount: 0);
+
+                      try {
+                        todoListRef.set(
+                          newToDoList.toJson(),
+                        );
+                      } catch (e) {
+                        print(e);
+                      }
 
                       Navigator.pop(context);
                     } else {
