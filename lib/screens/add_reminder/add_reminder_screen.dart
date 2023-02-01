@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reminders/models/category.dart';
 import 'package:reminders/models/category_collection.dart';
+import 'package:reminders/models/reminder/reminder.dart';
 import 'package:reminders/models/todo_list/todo_list.dart';
 import 'package:reminders/screens/add_reminder/select_reminder_category_screen.dart';
 import 'package:reminders/screens/add_reminder/select_reminder_list_screen.dart';
@@ -61,16 +64,56 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
   @override
   Widget build(BuildContext context) {
     final _toDoLists = Provider.of<List<ToDoList>>(context);
+    final user = Provider.of<User?>(context);
 
     return Scaffold(
       appBar: AppBar(
         actions: [
           TextButton(
-            onPressed: _title.isEmpty
-                ? null
-                : () {
-                    print("add to db");
-                  },
+            onPressed:
+                _title.isEmpty || _selectedDate == null || _selectedTime == null
+                    ? null
+                    : () async {
+                        _selectedList ??= _toDoLists.first;
+
+                        var remindersRef = FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(user?.uid)
+                            .collection("reminders")
+                            .doc();
+
+                        var newReminder = Reminder(
+                          id: remindersRef.id,
+                          title: _titleController.text,
+                          categoryId: _selectedCategory.id,
+                          list: _selectedList!.toJson(),
+                          dueDate: _selectedDate!.microsecondsSinceEpoch,
+                          dueTime: {
+                            "hour": _selectedTime!.hour,
+                            "minute": _selectedTime!.minute
+                          },
+                          notes: _notesController.text,
+                        );
+
+                        final listRef = FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .collection("todo_lists")
+                            .doc(_selectedList!.id);
+
+                        WriteBatch batch = FirebaseFirestore.instance.batch();
+                        batch.set(remindersRef, newReminder.toJSON());
+                        batch.update(
+                          listRef,
+                          {"reminder_count": _selectedList!.reminderCount + 1},
+                        );
+                        try {
+                          await batch.commit();
+                          Navigator.pop(context);
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
             child: const Text(
               "Add",
             ),
