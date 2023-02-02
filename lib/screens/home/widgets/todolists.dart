@@ -7,6 +7,7 @@ import 'package:reminders/models/common/custom_icon_collection.dart';
 import 'package:reminders/models/todo_list/todo_list.dart';
 import 'package:reminders/screens/view_list/view_list_screen.dart';
 import 'package:reminders/shared/category_icon.dart';
+import 'package:reminders/shared/dismissible_background.dart';
 
 class TodoLists extends StatelessWidget {
   const TodoLists({
@@ -32,23 +33,32 @@ class TodoLists extends StatelessWidget {
           itemBuilder: (context, index) {
             return Dismissible(
               key: UniqueKey(),
-              background: Container(
-                alignment: AlignmentDirectional.centerEnd,
-                color: Colors.red,
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: Icon(Icons.delete),
-                ),
-              ),
+              background: const DismissibleBackground(),
               onDismissed: (direction) async {
+                WriteBatch batch = FirebaseFirestore.instance.batch();
+
                 final toDoRef = FirebaseFirestore.instance
                     .collection("users")
                     .doc(user?.uid)
                     .collection("todo_lists")
                     .doc(todoLists[index].id);
 
+                final reminderShapshots = await FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(user?.uid)
+                    .collection("reminders")
+                    .where("list.id", isEqualTo: todoLists[index].id)
+                    .get();
+                //delete reminders
+                reminderShapshots.docs.forEach(
+                  (doc) {
+                    batch.delete(doc.reference);
+                  },
+                );
+                // delete todo
+                batch.delete(toDoRef);
                 try {
-                  await toDoRef.delete();
+                  await batch.commit();
                 } catch (e) {
                   print(e);
                 }
