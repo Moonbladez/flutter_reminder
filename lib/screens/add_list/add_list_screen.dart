@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminders/helpers.dart' as helpers;
 import 'package:reminders/models/common/custom_color.dart';
 import 'package:reminders/models/common/custom_color_collection.dart';
 import 'package:reminders/models/common/custom_icon.dart';
 import 'package:reminders/models/common/custom_icon_collection.dart';
 import 'package:reminders/models/todo_list/todo_list.dart';
-import 'package:reminders/models/todo_list/todo_list_collection.dart';
+import 'package:reminders/services/database_service.dart';
 
 class AddListScreen extends StatefulWidget {
   const AddListScreen({super.key});
@@ -48,32 +48,25 @@ class _AddListScreenState extends State<AddListScreen> {
                 : () {
                     if (_textController.text.isNotEmpty) {
                       final user = Provider.of<User?>(context, listen: false);
-                      final todoListRef = FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(user?.uid)
-                          .collection("todo_lists")
-                          .doc();
 
                       final newToDoList = ToDoList(
-                          id: todoListRef.id,
+                          id: null,
                           title: _textController.text,
                           icon: {
                             "id": _selectedIcon.id,
                             "color": _selectedColor.id
                           },
                           reminderCount: 0);
-
                       try {
-                        todoListRef.set(
-                          newToDoList.toJson(),
-                        );
+                        DatabaseService(uid: user!.uid)
+                            .addToDoList(toDoList: newToDoList);
+                        helpers.showSnackBar(context, "List added");
                       } catch (e) {
-                        print(e);
+                        helpers.showSnackBar(context, e.toString());
                       }
-
                       Navigator.pop(context);
                     } else {
-                      print("throw error");
+                      helpers.showSnackBar(context, "Unable to add list");
                     }
                   },
             child: const Text(

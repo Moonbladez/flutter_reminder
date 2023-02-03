@@ -3,7 +3,7 @@ import 'package:reminders/models/category.dart';
 
 import 'package:reminders/models/category_collection.dart';
 
-const LIST_ITEM_HEIGHT = 60.0;
+const double LIST_ITEM_HEIGHT = 60.0;
 
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key, required this.categoryCollection});

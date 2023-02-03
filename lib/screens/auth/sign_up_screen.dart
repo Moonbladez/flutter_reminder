@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:reminders/services/auth_service.dart';
@@ -88,7 +87,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                           if (user != null) {
                             print(user);
-                            // Navigator.of(context).pushNamed("/home");
                           }
                         }
                       },

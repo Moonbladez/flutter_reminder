@@ -1,15 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminders/helpers.dart' as helpers;
 import 'package:reminders/models/category.dart';
 import 'package:reminders/models/category_collection.dart';
 import 'package:reminders/models/reminder/reminder.dart';
 import 'package:reminders/models/todo_list/todo_list.dart';
 import 'package:reminders/screens/add_reminder/select_reminder_category_screen.dart';
 import 'package:reminders/screens/add_reminder/select_reminder_list_screen.dart';
+import 'package:reminders/services/database_service.dart';
 import 'package:reminders/shared/category_icon.dart';
+// ignore: depend_on_referenced_packages
 import "package:intl/intl.dart";
 
 class AddReminderScreen extends StatefulWidget {
@@ -76,14 +78,8 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                     : () async {
                         _selectedList ??= _toDoLists.first;
 
-                        var remindersRef = FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(user?.uid)
-                            .collection("reminders")
-                            .doc();
-
                         var newReminder = Reminder(
-                          id: remindersRef.id,
+                          id: null,
                           title: _titleController.text,
                           categoryId: _selectedCategory.id,
                           list: _selectedList!.toJson(),
@@ -95,23 +91,13 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
                           notes: _notesController.text,
                         );
 
-                        final listRef = FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .collection("todo_lists")
-                            .doc(_selectedList!.id);
-
-                        WriteBatch batch = FirebaseFirestore.instance.batch();
-                        batch.set(remindersRef, newReminder.toJSON());
-                        batch.update(
-                          listRef,
-                          {"reminder_count": _selectedList!.reminderCount + 1},
-                        );
                         try {
-                          await batch.commit();
+                          DatabaseService(uid: user!.uid).addReminder(
+                            reminder: newReminder,
+                          );
                           Navigator.pop(context);
                         } catch (e) {
-                          print(e);
+                          helpers.showSnackBar(context, e.toString());
                         }
                       },
             child: const Text(

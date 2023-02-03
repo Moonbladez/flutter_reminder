@@ -1,11 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminders/helpers.dart';
 import 'package:reminders/models/common/custom_color_collection.dart';
 import 'package:reminders/models/common/custom_icon_collection.dart';
 import 'package:reminders/models/todo_list/todo_list.dart';
 import 'package:reminders/screens/view_list/view_list_screen.dart';
+import 'package:reminders/services/database_service.dart';
 import 'package:reminders/shared/category_icon.dart';
 import 'package:reminders/shared/dismissible_background.dart';
 
@@ -35,35 +36,18 @@ class TodoLists extends StatelessWidget {
               key: UniqueKey(),
               background: const DismissibleBackground(),
               onDismissed: (direction) async {
-                WriteBatch batch = FirebaseFirestore.instance.batch();
-
-                final toDoRef = FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(user?.uid)
-                    .collection("todo_lists")
-                    .doc(todoLists[index].id);
-
-                final reminderShapshots = await FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(user?.uid)
-                    .collection("reminders")
-                    .where("list.id", isEqualTo: todoLists[index].id)
-                    .get();
-                //delete reminders
-                reminderShapshots.docs.forEach(
-                  (doc) {
-                    batch.delete(doc.reference);
-                  },
-                );
-                // delete todo
-                batch.delete(toDoRef);
                 try {
-                  await batch.commit();
+                  await DatabaseService(uid: user!.uid)
+                      .deleteToDoList(todoLists[index])
+                      .then(
+                        (value) => showSnackBar(context, "List deleted"),
+                      );
                 } catch (e) {
-                  print(e);
+                  showSnackBar(
+                    context,
+                    e.toString(),
+                  );
                 }
-
-                toDoRef.delete();
               },
               direction: DismissDirection.endToStart,
               child: ListTile(

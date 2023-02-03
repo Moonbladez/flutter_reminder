@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:reminders/screens/home/home_screen.dart';
 import 'package:reminders/services/auth_service.dart';
 
 class SignInScreen extends StatefulWidget {
